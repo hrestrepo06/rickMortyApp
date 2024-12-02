@@ -17,6 +17,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
+import { Character, Result } from 'src/app/interfaces/characters.interface';
 
 @Component({
   selector: 'app-home',
@@ -43,8 +44,10 @@ import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
 export class HomePage implements OnInit {
   private rickAndMortySvc = inject(RickAndMortyService);
 
-  characters: any[] = [];
+  
+  characters: Result[] = [];
   params = {} as any;
+  //characters: Result | null = null;
 
   constructor() {}
 
@@ -55,16 +58,18 @@ export class HomePage implements OnInit {
 
   //===  Obtener personajes  ======
   getCharacter(event?: any) {
+  
     this.params.page += 1;
 
     this.rickAndMortySvc.getCharacter(this.params).subscribe({
-      next: (res: any) => {
+        
+        next: (res: any) => {
         this.characters.push(...res.results);
         console.log(this.characters);
 
         if (event) event.target.complete();
       },
-      error: (error: any) => {
+      error: (error: Error) => {
         if (event) event.target.complete();
       },
     });
@@ -78,7 +83,7 @@ export class HomePage implements OnInit {
       next: (res: any) => {
         this.characters = res.results;
       },
-      error: (error: any) => {},
+      error: (error: Error) => {},
     });
   }
 }
