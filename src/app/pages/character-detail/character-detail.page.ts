@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -52,6 +52,7 @@ import { Episodes, Result } from 'src/app/interfaces/characters.interface';
 export class CharacterDetailPage implements OnInit {
   private actRoute = inject(ActivatedRoute);
   private rickAndMortySvc = inject(RickAndMortyService);
+  private elRef = inject(ElementRef);
 
   characterId: string = '';
   character: Result | null = null;
@@ -62,7 +63,14 @@ export class CharacterDetailPage implements OnInit {
     this.characterId = this.actRoute.snapshot.paramMap.get('id') as string;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+      // Mueve el foco al contenedor principal de la nueva página
+      const mainElement = this.elRef.nativeElement.querySelector('ion-content');
+      if (mainElement) {
+        mainElement.setAttribute('tabindex', '-1');
+        mainElement.focus();
+      }
+  }
 
   ionViewWillEnter() {
     this.getCharacter();
