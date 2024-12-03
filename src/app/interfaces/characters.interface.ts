@@ -58,3 +58,8 @@ export interface Episodes {
     url:        string;
     created:    Date;
 }
+
+export interface CharacterParams {
+    page: number;
+    name?: string; // Por ejemplo, si usas un parámetro para buscar por nombre
+  }

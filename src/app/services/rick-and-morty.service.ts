@@ -11,10 +11,9 @@ export class RickAndMortyService {
   private http = inject(HttpClient);
   
   constructor() { }
-  
 
-  getCharacter(params: any): Observable<Character[]>{
-    return this.http.get<Character[]>(environment.character, {params})
+  getCharacter(params: any): Observable<Character>{
+    return this.http.get<Character>(environment.character, {params})
   }
   
   getCharacterById(id: string): Observable<Result>{

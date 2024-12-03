@@ -86,7 +86,6 @@ export class CharacterDetailPage implements OnInit {
     for (let url of this.character.episode) {
       this.rickAndMortySvc.getByUrl(url).subscribe({
         next: (res: Episodes) => {
-          console.log(res);
           this.episodes.push(res);
         },
         error: (error: Error) => {},

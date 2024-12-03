@@ -17,7 +17,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
-import { Character, Result } from 'src/app/interfaces/characters.interface';
+import { Character, CharacterParams, Result } from 'src/app/interfaces/characters.interface';
 
 @Component({
   selector: 'app-home',
@@ -44,33 +44,36 @@ import { Character, Result } from 'src/app/interfaces/characters.interface';
 export class HomePage implements OnInit {
   private rickAndMortySvc = inject(RickAndMortyService);
 
-  
   characters: Result[] = [];
-  params = {} as any;
-  //characters: Result | null = null;
+  params: CharacterParams = { page: 0 };
+  
 
   constructor() {}
 
   ngOnInit() {
-    this.params.page = 0;
     this.getCharacter();
   }
 
   //===  Obtener personajes  ======
-  getCharacter(event?: any) {
+  getCharacter(event?:  Event) {
   
     this.params.page += 1;
 
     this.rickAndMortySvc.getCharacter(this.params).subscribe({
         
-        next: (res: any) => {
+        next: (res: Character) => {
         this.characters.push(...res.results);
-        console.log(this.characters);
-
-        if (event) event.target.complete();
+ 
+        if (event) {
+          const infiniteScroll = event.target as HTMLIonInfiniteScrollElement;
+          infiniteScroll.complete();
+        }
       },
       error: (error: Error) => {
-        if (event) event.target.complete();
+        if (event) {
+          const infiniteScroll = event.target as HTMLIonInfiniteScrollElement;
+          infiniteScroll.complete();
+        }
       },
     });
   }
@@ -80,7 +83,7 @@ export class HomePage implements OnInit {
     this.params.page = 1;
 
     this.rickAndMortySvc.getCharacter(this.params).subscribe({
-      next: (res: any) => {
+      next: (res: Character) => {
         this.characters = res.results;
       },
       error: (error: Error) => {},
