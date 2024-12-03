@@ -15,6 +15,7 @@ import {
   IonInfiniteScrollContent,
   IonSearchbar,
 } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular'; // Si usas Ionic para notificaciones visuales
 
 import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
 import { Character, CharacterParams, Result } from 'src/app/interfaces/characters.interface';
@@ -43,7 +44,8 @@ import { Character, CharacterParams, Result } from 'src/app/interfaces/character
 })
 export class HomePage implements OnInit {
   private rickAndMortySvc = inject(RickAndMortyService);
-
+  private toastController = inject(ToastController);
+  
   characters: Result[] = [];
   params: CharacterParams = { page: 0 };
   
@@ -86,7 +88,19 @@ export class HomePage implements OnInit {
       next: (res: Character) => {
         this.characters = res.results;
       },
-      error: (error: Error) => {},
+      error: async (error: any) => {
+        if (error.status === 404) {
+          // Mostrar un mensaje amigable
+          const toast = await this.toastController.create({
+            message: 'Personaje no encontrado. Por favor, intenta nuevamente.',
+            duration: 3000,
+            color: 'danger',
+          });
+          await toast.present();
+        } else {
+          // Manejo de otros errores
+          console.error('Error desconocido:', error);
+        }}
     });
   }
 }
